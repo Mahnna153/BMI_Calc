@@ -1,3 +1,7 @@
+
+import 'dart:math';
+
+import 'package:bmi_cal/bmi_res.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'BMI',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -22,8 +26,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget
+class HomeScreen extends StatefulWidget
 {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  bool isMale = true;
+  double height = 120;
+
+  double weight = 70;
+  double age = 25;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,48 +67,56 @@ class HomeScreen extends StatelessWidget
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        color: Colors.teal[100],
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_circle,
-                              size: 100.0,
-                            ),
-                            SizedBox(
-                              height: 15.0,
-                            ),
-                            Text(
-                              'MALE',
-                              style: TextStyle(
-                                fontSize: 20.0,
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            isMale = true;
+                          });
+                        },
+                        child: Container(
+                          color: isMale ? Colors.teal[100] : Colors.white ,
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image(image: AssetImage('images/male.png'),height: 100,width: 100,),
+                              SizedBox(
+                                height: 15.0,
                               ),
-                            ),
-                          ],
+                              Text(
+                                'MALE',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_circle,
-                              size: 100.0,
-                            ),
-                            SizedBox(
-                              height: 15.0,
-                            ),
-                            Text(
-                              'FEMALE',
-                              style: TextStyle(
-                                fontSize: 20.0,
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            isMale = false;
+                          });
+                        },
+                        child: Container(
+                          color: isMale ?Colors.white: Colors.teal[100],
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                          Image(image: AssetImage('images/female.png'),height: 100,width: 100,),
+                              SizedBox(
+                                height: 15.0,
                               ),
-                            ),
-                          ],
+                              Text(
+                                'FEMALE',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -126,12 +150,13 @@ class HomeScreen extends StatelessWidget
                     const SizedBox(
                       height: 10.0,
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      textBaseline: TextBaseline.alphabetic,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
                       children: [
                         Text(
-                          '160',
+                          '${height.round()}',
                           style: TextStyle(
                               fontSize: 30.0, fontWeight: FontWeight.w700),
                         ),
@@ -139,12 +164,15 @@ class HomeScreen extends StatelessWidget
                       ],
                     ),
                     Slider(
-                      value: 160.0,
+                      value:height,
                       min: 120.0,
                       max: 220.0,
                       activeColor: Colors.teal,
                       inactiveColor: Colors.grey[200],
                       onChanged: (value) {
+                        setState(() {
+                          height=value;
+                        });
                         print(value.round());
                       },
                     ),
@@ -170,40 +198,50 @@ class HomeScreen extends StatelessWidget
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               'WEIGHT',
                               style: TextStyle(
                                 fontSize: 20.0,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10.0,
                             ),
-                            Text(
-                              '160',
+                             Text(
+                              '${weight}',
                               style: TextStyle(
                                   fontSize: 30.0, fontWeight: FontWeight.w700),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 FloatingActionButton(
-                                  onPressed: (){},
+                                  heroTag: 'weight-',
+                                  onPressed: (){
+                                    setState(() {
+                                      weight--;
+                                    });
+                                  },
                                   backgroundColor: Colors.teal,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.minimize,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 15.0,
                                 ),
                                 FloatingActionButton(
-                                  onPressed: (){},
+                                  heroTag: 'weight+',
+                                  onPressed: (){
+                                    setState(() {
+                                      weight++;
+                                    });
+                                  },
                                   backgroundColor: Colors.teal,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.add,
                                   ),
                                 ),
@@ -213,7 +251,7 @@ class HomeScreen extends StatelessWidget
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20.0,
                     ),
                     Expanded(
@@ -227,40 +265,50 @@ class HomeScreen extends StatelessWidget
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               'AGE',
                               style: TextStyle(
                                 fontSize: 20.0,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10.0,
                             ),
-                            Text(
-                              '20',
+                             Text(
+                              '${age}',
                               style: TextStyle(
                                   fontSize: 30.0, fontWeight: FontWeight.w700),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 FloatingActionButton(
-                                  onPressed: (){},
+                                  heroTag: 'age-',
+                                  onPressed: (){
+                                    setState(() {
+                                      age--;
+                                    });
+                                  },
                                   backgroundColor: Colors.teal,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.minimize,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 15.0,
                                 ),
                                 FloatingActionButton(
-                                  onPressed: (){},
+                                  heroTag: 'age+',
+                                  onPressed: (){
+                                    setState(() {
+                                      age++;
+                                    });
+                                  },
                                   backgroundColor: Colors.teal,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.add,
                                   ),
                                 ),
@@ -277,13 +325,20 @@ class HomeScreen extends StatelessWidget
           ),
           Container(
             width: double.infinity,
-            height: 40.0,
+            color: Colors.tealAccent,
+            height: 60.0,
             child: MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                var result = weight / pow(height/100, 2) ;
+                Navigator.push(context, MaterialPageRoute(builder: (Context) => BMI_Res(
+gender: isMale ? 'Male' : 'Female',age: age, res: result,
+                )));
+              },
               child: const Text(
                 'CALCULATE',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 25,
                 ),
               ),
             ),
